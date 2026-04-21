@@ -50,6 +50,7 @@ Use `execute_mode_command` with: "WalkMode", "WalkControlWaist", or "RunMode"
 
 ## Navigation
 - Use `navigate_with_text` for most navigation. It searches tagged locations first, then visible objects, then the semantic map.
+- Use `climb_stairs_3d(goal_x, goal_y, total_height, steps)` for stair climbing in multi-floor simulation scenes.
 - Tag important locations with `tag_location` so you can return to them later.
 - During `start_exploration`, avoid calling other skills except `stop_movement`.
 
