@@ -21,6 +21,7 @@ from dimos.mapping.occupancy.path_map import NavigationStrategy
 from dimos.models.vl.create import VlModelName
 
 ViewerBackend: TypeAlias = Literal["rerun", "rerun-web", "rerun-connect", "foxglove", "none"]
+SupportedLanguage: TypeAlias = Literal["en", "zh"]
 
 
 def _get_all_numbers(s: str) -> list[float]:
@@ -54,6 +55,7 @@ class GlobalConfig(BaseSettings):
     dtop: bool = False
     obstacle_avoidance: bool = True
     detection_model: VlModelName = "moondream"
+    language: SupportedLanguage = "en"
 
     model_config = SettingsConfigDict(
         env_file=".env",

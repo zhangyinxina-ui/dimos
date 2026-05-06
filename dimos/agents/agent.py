@@ -25,9 +25,11 @@ from langchain_core.tools import StructuredTool
 from langgraph.graph.state import CompiledStateGraph
 from reactivex.disposable import Disposable
 
+from dimos.agents.i18n import SupportedLanguage, get_system_prompt
 from dimos.agents.system_prompt import SYSTEM_PROMPT
 from dimos.agents.utils import pretty_print_langchain_message
 from dimos.core.core import rpc
+from dimos.core.global_config import global_config
 from dimos.core.module import Module, ModuleConfig, SkillInfo
 from dimos.core.rpc_client import RpcCall, RPCClient
 from dimos.core.stream import In, Out
@@ -43,6 +45,8 @@ class AgentConfig(ModuleConfig):
     system_prompt: str | None = SYSTEM_PROMPT
     model: str = "gpt-4o"
     model_fixture: str | None = None
+    robot: str = "go2"
+    language: SupportedLanguage = "en"
 
 
 class Agent(Module[AgentConfig]):
@@ -102,6 +106,11 @@ class Agent(Module[AgentConfig]):
 
             model = MockModel(json_path=self.config.model_fixture)
 
+        language = self.config.language or global_config.language
+        system_prompt = self.config.system_prompt
+        if system_prompt is not None and language != "en":
+            system_prompt = get_system_prompt(self.config.robot, language, system_prompt)
+
         with self._lock:
             # Here to prevent unwanted imports in the file.
             from langchain.agents import create_agent
@@ -109,7 +118,7 @@ class Agent(Module[AgentConfig]):
             self._state_graph = create_agent(
                 model=model,
                 tools=_get_tools_from_modules(self, modules, self.rpc),
-                system_prompt=self.config.system_prompt,
+                system_prompt=system_prompt,
             )
             self._thread.start()
 

@@ -23,7 +23,7 @@ from dimos.robot.unitree.g1.skill_container import g1_skills
 from dimos.robot.unitree.g1.system_prompt import G1_SYSTEM_PROMPT
 
 _agentic_skills = autoconnect(
-    agent(system_prompt=G1_SYSTEM_PROMPT),
+    agent(system_prompt=G1_SYSTEM_PROMPT, robot="g1"),
     navigation_skill(),
     speak_skill(),
     g1_skills(),
